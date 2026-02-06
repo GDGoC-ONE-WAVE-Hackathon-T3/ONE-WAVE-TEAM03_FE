@@ -7,42 +7,6 @@ import { Button } from "@/components/ui/button"
 
 const TECH_STACKS = [
   {
-    id: "react",
-    name: "React",
-    iconClass: "fa-brands fa-react",
-    iconColor: "text-[#4E5968]",
-    activeIconColor: "text-[#3182F6]",
-    containerBg: "bg-[#F2F4F6]",
-    hoverContainerBg: "bg-blue-50"
-  },
-  {
-    id: "vue",
-    name: "Vue.js",
-    iconClass: "fa-brands fa-vuejs",
-    iconColor: "text-[#4E5968]",
-    activeIconColor: "text-[#3182F6]", 
-    containerBg: "bg-[#F2F4F6]",
-    hoverContainerBg: "bg-blue-50"
-  },
-  {
-    id: "typescript",
-    name: "TypeScript",
-    iconClass: "fa-solid fa-code",
-    iconColor: "text-[#4E5968]",
-    activeIconColor: "text-[#3182F6]", 
-    containerBg: "bg-[#F2F4F6]",
-    hoverContainerBg: "bg-blue-50"
-  },
-  {
-    id: "nextjs",
-    name: "Next.js",
-    iconClass: "fa-solid fa-n",
-    iconColor: "text-[#4E5968]",
-    activeIconColor: "text-[#3182F6]",
-    containerBg: "bg-[#F2F4F6]",
-    hoverContainerBg: "bg-blue-50"
-  },
-  {
     id: "nodejs",
     name: "Node.js",
     iconClass: "fa-brands fa-node-js",
@@ -77,43 +41,43 @@ const TECH_STACKS = [
     activeIconColor: "text-[#3182F6]",
     containerBg: "bg-[#F2F4F6]",
     hoverContainerBg: "bg-blue-50"
-  },
-  {
-    id: "docker",
-    name: "Docker",
-    iconClass: "fa-brands fa-docker",
-    iconColor: "text-[#4E5968]",
-    activeIconColor: "text-[#3182F6]",
-    containerBg: "bg-[#F2F4F6]",
-    hoverContainerBg: "bg-blue-50"
-  },
-  {
-    id: "mysql",
-    name: "MySQL",
-    iconClass: "fa-solid fa-database",
-    iconColor: "text-[#4E5968]",
-    activeIconColor: "text-[#3182F6]",
-    containerBg: "bg-[#F2F4F6]",
-    hoverContainerBg: "bg-blue-50"
-  },
-  {
-    id: "aws",
-    name: "AWS",
-    iconClass: "fa-brands fa-aws",
-    iconColor: "text-[#4E5968]",
-    activeIconColor: "text-[#3182F6]",
-    containerBg: "bg-[#F2F4F6]",
-    hoverContainerBg: "bg-blue-50"
-  },
-  {
-    id: "github",
-    name: "GitHub Actions",
-    iconClass: "fa-brands fa-github",
-    iconColor: "text-[#4E5968]",
-    activeIconColor: "text-[#3182F6]",
-    containerBg: "bg-[#F2F4F6]",
-    hoverContainerBg: "bg-blue-50"
   }
+  // {
+  //   id: "docker",
+  //   name: "Docker",
+  //   iconClass: "fa-brands fa-docker",
+  //   iconColor: "text-[#4E5968]",
+  //   activeIconColor: "text-[#3182F6]",
+  //   containerBg: "bg-[#F2F4F6]",
+  //   hoverContainerBg: "bg-blue-50"
+  // },
+  // {
+  //   id: "mysql",
+  //   name: "MySQL",
+  //   iconClass: "fa-solid fa-database",
+  //   iconColor: "text-[#4E5968]",
+  //   activeIconColor: "text-[#3182F6]",
+  //   containerBg: "bg-[#F2F4F6]",
+  //   hoverContainerBg: "bg-blue-50"
+  // },
+  // {
+  //   id: "aws",
+  //   name: "AWS",
+  //   iconClass: "fa-brands fa-aws",
+  //   iconColor: "text-[#4E5968]",
+  //   activeIconColor: "text-[#3182F6]",
+  //   containerBg: "bg-[#F2F4F6]",
+  //   hoverContainerBg: "bg-blue-50"
+  // },
+  // {
+  //   id: "github",
+  //   name: "GitHub Actions",
+  //   iconClass: "fa-brands fa-github",
+  //   iconColor: "text-[#4E5968]",
+  //   activeIconColor: "text-[#3182F6]",
+  //   containerBg: "bg-[#F2F4F6]",
+  //   hoverContainerBg: "bg-blue-50"
+  // }
 ]
 
 export default function TechSelectPage() {
@@ -133,10 +97,11 @@ export default function TechSelectPage() {
       alert("최소 1개 이상의 기술을 선택해주세요.")
       return
     }
-    console.log("Selected techs:", selectedTechs)
     // Next step logic here
-    alert(`선택된 기술: ${selectedTechs.join(", ")}\n가상 입사를 시작합니다!`)
+    const query = selectedTechs.length ? `?techs=${selectedTechs.join(',')}` : ''
+    router.push(`/select/analysis${query}`)
   }
+
 
   const handlePrev = () => {
     router.back()
