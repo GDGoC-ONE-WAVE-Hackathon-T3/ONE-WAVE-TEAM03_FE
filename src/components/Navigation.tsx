@@ -12,7 +12,7 @@ export function Navigation() {
         <div className="w-8 h-8 bg-[#3182F6] rounded-lg flex items-center justify-center">
           <Code className="text-white w-5 h-5" />
         </div>
-          <span className="text-[22px] font-bold text-[#191F28]">오지랖</span>
+          <span className="text-[22px] font-bold text-[#191F28]">COZZY</span>
         </Link>
       </div>
       <nav className="flex items-center gap-8">
@@ -22,7 +22,7 @@ export function Navigation() {
         {/* <span className="text-[#4E5968] font-medium cursor-pointer">프로젝트 둘러보기</span> */}
         <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
            {/* Using a placeholder since the original image might not load or be desired. Using a simple icon or just the div */}
-           <img src="https://vinsign.app/resources/avatars/avatar-1.png" alt="User" className="w-full h-full object-cover" />
+           <img src="/cozzy_logo.png" alt="User" className="w-full h-full object-cover" />
         </div>
       </nav>
     </header>
