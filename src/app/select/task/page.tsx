@@ -58,7 +58,7 @@ const REPOSITORIES = [
     id: 5,
     title: "Spring-JPA-Board-Legacy",
     description: "기존의 MyBatis 기반 게시판 프로젝트를 Spring Data JPA로 마이그레이션하는 협업 프로젝트입니다.",
-    tech: "Spring Boot",
+    tech: "Spring",
     techClass: "bg-[#F2F4F6] text-[#4E5968]",
     level: "입문",
     levelClass: "bg-[#E8F3FF] text-[#3182F6]",
@@ -85,8 +85,52 @@ export default function TaskSelectPage() {
   const searchParams = useSearchParams()
   const [selectedRepoId, setSelectedRepoId] = React.useState<number | null>(null)
 
-  // Filter states (visual only for now as per requirement to just show UI)
-  const [activeFilter, setActiveFilter] = React.useState("전체")
+  // Get params
+  const job = searchParams.get('job')
+  const techsParam = searchParams.get('techs')
+  const selectedTechIds = techsParam ? techsParam.split(',') : []
+
+  // Map IDs to Names for display
+  const TECH_ID_TO_NAME: Record<string, string> = {
+    "nodejs": "Node.js",
+    "spring": "Spring", // Adjusted to match mock data
+    "python": "Python",
+    "java": "Java",
+    "react": "React",
+    "typescript": "TypeScript",
+    "nextjs": "Next.js",
+    "vuejs": "Vue.js"
+  }
+
+  // Generate available filters - Show ALL techs regardless of selection
+  // const filterTechs = ["React", "TypeScript", "Next.js", "Node.js", "Python", "Spring Boot", "Vue.js", "Java"]
+  const filterTechs = ["Node.js", "Spring", "Python", "Java"]
+
+  // Initialize active filters with selected techs from params
+  // Use useEffect to update if params change, or just initial state
+  const [activeFilters, setActiveFilters] = React.useState<string[]>(() => {
+    return selectedTechIds.map(id => TECH_ID_TO_NAME[id] || id).filter(name => filterTechs.includes(name))
+  })
+
+  const toggleFilter = (tech: string) => {
+    setActiveFilters(prev => 
+      prev.includes(tech) 
+        ? prev.filter(t => t !== tech) 
+        : [...prev, tech]
+    )
+  }
+
+  // Filter Repositories
+  const filteredRepos = REPOSITORIES.filter(repo => {
+    // If no filters selected, show ALL (or show NONE? usually ALL in this context if "All" button is gone)
+    // Interpret "Not All" as removing the "All" button, but empty selection implies no restrictions.
+    if (activeFilters.length === 0) return true
+    
+    // Check if repo matches ANY of the active filters
+    return activeFilters.some(filter => 
+        repo.tech.toLowerCase().includes(filter.toLowerCase()) || filter.toLowerCase().includes(repo.tech.toLowerCase())
+    )
+  })
 
   const handleNext = () => {
     if (!selectedRepoId) {
@@ -94,9 +138,11 @@ export default function TaskSelectPage() {
       return
     }
     // Pass the selected repository ID and previous techs to the analysis page
-    const techs = searchParams.get('techs')
-    const query = techs ? `?techs=${techs}&repo=${selectedRepoId}` : `?repo=${selectedRepoId}`
-    router.push(`/select/analysis${query}`)
+    // Also pass 'job' param if needed by next step, though currently only analysis uses it?
+    // Let's pass it to be safe and consistent
+    const query = techsParam ? `?techs=${techsParam}&repo=${selectedRepoId}` : `?repo=${selectedRepoId}`
+    const jobQuery = job ? `&job=${job}` : ''
+    router.push(`/select/analysis${query}${jobQuery}`)
   }
   
   const handlePrev = () => {
@@ -110,11 +156,6 @@ export default function TaskSelectPage() {
       <main className="px-20 py-12 max-w-[1440px] mx-auto">
         
         {/* Progress Stepper - Custom for this page to match design */}
-        {/* Note: The design usually has this in the header in the HTML reference, 
-            but in our Next.js app structure so far it's been inside the page content.
-            I'll keep it consistent with the previous pages for now but styled as per HTML reference if possible. 
-            Actually, the previous pages had their own stepper. Let's adapt to that style but with Step 3 active.
-        */}
          <div className="flex items-center gap-3 mb-12">
             <div className="flex items-center gap-2 text-gray-400">
                 <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-sm">
@@ -147,13 +188,13 @@ export default function TaskSelectPage() {
             <div className="mb-8">
                 <h2 className="text-sm font-bold text-[#8B95A1] mb-4 uppercase tracking-wider">기술 스택 필터</h2>
                 <div className="flex flex-wrap gap-3">
-                    {["전체", "React", "TypeScript", "Next.js", "Node.js", "Python", "Spring Boot", "Vue.js"].map((tech) => (
+                    {filterTechs.map((tech) => (
                         <button 
                             key={tech}
-                            onClick={() => setActiveFilter(tech)}
+                            onClick={() => toggleFilter(tech)}
                             className={cn(
                                 "px-5 py-2.5 rounded-full font-medium text-sm transition-colors",
-                                activeFilter === tech 
+                                activeFilters.includes(tech)
                                     ? "bg-[#3182F6] text-white font-semibold" 
                                     : "bg-[#F2F4F6] text-[#4E5968] hover:bg-[#E5E8EB]"
                             )}
@@ -164,25 +205,10 @@ export default function TaskSelectPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-10 mb-8">
-                <div>
-                    <h2 className="text-sm font-bold text-[#8B95A1] mb-4 uppercase tracking-wider">난이도 및 토픽</h2>
-                    <div className="flex flex-wrap gap-2">
-                        {["초급", "리팩토링", "테스트 코드"].map((tag) => (
-                             <span key={tag} className="px-3 py-1.5 bg-[#E8F3FF] text-[#3182F6] rounded-md text-sm font-medium flex items-center gap-2">
-                                {tag} <i className="fa-solid fa-xmark cursor-pointer"></i>
-                            </span>
-                        ))}
-                        <button className="px-3 py-1.5 border border-dashed border-[#D1D6DB] text-[#8B95A1] rounded-md text-sm font-medium hover:bg-gray-50">
-                            <i className="fa-solid fa-plus mr-1"></i> 태그 추가
-                        </button>
-                    </div>
-                </div>
-                <div className="flex items-end justify-end">
-                    <button className="px-8 py-4 bg-[#3182F6] text-white rounded-xl font-bold text-[16px] hover:bg-[#1B64DA] transition-colors shadow-lg shadow-blue-100">
-                        필터링 적용하기
-                    </button>
-                </div>
+            <div className="flex justify-end border-t border-[#F2F4F6] pt-6">
+                <button className="px-8 py-4 bg-[#3182F6] text-white rounded-xl font-bold text-[16px] hover:bg-[#1B64DA] transition-colors shadow-lg shadow-blue-100">
+                    필터링 적용하기
+                </button>
             </div>
         </section>
 
@@ -191,62 +217,65 @@ export default function TaskSelectPage() {
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                     <span className="text-xl font-bold text-[#191F28]">탐색된 레포지토리</span>
-                    <span className="text-[#3182F6] font-bold text-xl">128</span>
+                    <span className="text-[#3182F6] font-bold text-xl">{filteredRepos.length}</span>
                 </div>
-                <div className="flex bg-[#F2F4F6] p-1 rounded-lg">
+                {/* <div className="flex bg-[#F2F4F6] p-1 rounded-lg">
                     <button className="px-4 py-2 bg-white rounded-md shadow-sm text-sm font-bold flex items-center gap-2 text-[#191F28]">
                         <i className="fa-solid fa-grip"></i> 카드 뷰
                     </button>
                     <button className="px-4 py-2 text-[#8B95A1] text-sm font-medium flex items-center gap-2 hover:text-[#4E5968]">
                         <i className="fa-solid fa-list"></i> 리스트 뷰
                     </button>
+                </div> */}
+            </div>
+
+            {filteredRepos.length > 0 ? (
+                <div className="grid grid-cols-3 gap-6">
+                    {filteredRepos.map((repo) => (
+                        <div 
+                            key={repo.id}
+                            onClick={() => setSelectedRepoId(repo.id)}
+                            className={cn(
+                                "group relative p-6 bg-white rounded-2xl border-2 transition-all cursor-pointer",
+                                selectedRepoId === repo.id 
+                                    ? "border-[#3182F6] shadow-sm"
+                                    : "border-[#E5E8EB] shadow-sm hover:border-[#3182F6]"
+                            )}
+                        >
+                            {selectedRepoId === repo.id && (
+                                <div className="absolute top-4 right-4">
+                                    <i className="fa-solid fa-circle-check text-[#3182F6] text-xl"></i>
+                                </div>
+                            )}
+                            
+                            <div className="flex gap-2 mb-4">
+                                <span className={cn("text-[11px] font-bold px-2 py-1 rounded", repo.techClass)}>{repo.tech}</span>
+                                {/* <span className={cn("text-[11px] font-bold px-2 py-1 rounded", repo.levelClass)}>{repo.level}</span> */}
+                            </div>
+                            <h3 className="text-lg font-bold mb-3 text-[#191F28] group-hover:text-[#3182F6] transition-colors">{repo.title}</h3>
+                            <p className="text-[#4E5968] text-sm leading-relaxed mb-6 line-clamp-3">
+                                {repo.description}
+                            </p>
+                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#F2F4F6]">
+                                {/* <button className="text-[#3182F6] text-sm font-bold flex items-center gap-1">
+                                    자세히보기 <i className="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button> */}
+                                <div className="flex items-center gap-3 text-[#8B95A1] text-xs">
+                                    <span className="flex items-center gap-1"><i className="fa-regular fa-eye"></i> {repo.views}</span>
+                                    <span className="flex items-center gap-1"><i className="fa-regular fa-star"></i> {repo.stars}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            </div>
+            ) : (
+                <div className="text-center py-20 text-[#8B95A1]">
+                    <i className="fa-solid fa-magnifying-glass text-4xl mb-4"></i>
+                    <p>선택하신 기술 스택에 해당하는 과제가 없습니다.</p>
+                </div>
+            )}
 
-            <div className="grid grid-cols-3 gap-6">
-                {REPOSITORIES.map((repo) => (
-                    <div 
-                        key={repo.id}
-                        onClick={() => setSelectedRepoId(repo.id)}
-                        className={cn(
-                            "group relative p-6 bg-white rounded-2xl border-2 transition-all cursor-pointer",
-                            selectedRepoId === repo.id 
-                                ? "border-[#3182F6] shadow-sm"
-                                : "border-[#E5E8EB] shadow-sm hover:border-[#3182F6]"
-                        )}
-                    >
-                         {selectedRepoId === repo.id && (
-                            <div className="absolute top-4 right-4">
-                                <i className="fa-solid fa-circle-check text-[#3182F6] text-xl"></i>
-                            </div>
-                        )}
-                        
-                        <div className="flex gap-2 mb-4">
-                            <span className={cn("text-[11px] font-bold px-2 py-1 rounded", repo.techClass)}>{repo.tech}</span>
-                            <span className={cn("text-[11px] font-bold px-2 py-1 rounded", repo.levelClass)}>{repo.level}</span>
-                        </div>
-                        <h3 className="text-lg font-bold mb-3 text-[#191F28] group-hover:text-[#3182F6] transition-colors">{repo.title}</h3>
-                        <p className="text-[#4E5968] text-sm leading-relaxed mb-6 line-clamp-3">
-                            {repo.description}
-                        </p>
-                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#F2F4F6]">
-                            <button className="text-[#3182F6] text-sm font-bold flex items-center gap-1">
-                                자세히보기 <i className="fa-solid fa-arrow-right text-[10px]"></i>
-                            </button>
-                            <div className="flex items-center gap-3 text-[#8B95A1] text-xs">
-                                <span className="flex items-center gap-1"><i className="fa-regular fa-eye"></i> {repo.views}</span>
-                                <span className="flex items-center gap-1"><i className="fa-regular fa-star"></i> {repo.stars}</span>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
 
-            <div className="mt-12 flex justify-center pb-32">
-                <button className="px-10 py-4 bg-white border border-[#E5E8EB] text-[#4E5968] font-bold rounded-xl hover:bg-gray-50 transition-colors">
-                    더 많은 레포지토리 불러오기
-                </button>
-            </div>
         </section>
       </main>
 

@@ -35,7 +35,7 @@ export default function SelectPage() {
       alert("미구현 기능입니다. 백엔드를 선택해주세요")
       return
     }
-    router.push("/select/tech")
+    router.push(`/select/tech?job=${selectedJob}`)
   }
 
   return (

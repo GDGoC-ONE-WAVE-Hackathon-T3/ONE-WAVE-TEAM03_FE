@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
@@ -92,6 +92,9 @@ export default function TechSelectPage() {
     )
   }
 
+  const searchParams = useSearchParams()
+  const job = searchParams.get('job')
+
   const handleNext = () => {
     if (selectedTechs.length === 0) {
       alert("최소 1개 이상의 기술을 선택해주세요.")
@@ -99,7 +102,9 @@ export default function TechSelectPage() {
     }
     // Next step logic here
     const query = selectedTechs.length ? `?techs=${selectedTechs.join(',')}` : ''
-    router.push(`/select/task${query}`)
+    //job params validation
+    const jobQuery = job ? `&job=${job}` : ''
+    router.push(`/select/task${query}${jobQuery}`)
   }
 
 
