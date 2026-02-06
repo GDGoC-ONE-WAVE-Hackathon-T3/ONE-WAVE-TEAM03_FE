@@ -50,8 +50,8 @@ export default function AnalysisPage() {
                     <div className="col-span-7 space-y-16">
                         <section>
                             <div className="flex items-center gap-4 mb-8">
-                                <h2 className="text-2xl font-bold text-[#191F28]">이슈 독해 가이드</h2>
-                                <span className="px-3 py-1 bg-[#E8F3FF] text-[#3182F6] text-xs font-bold rounded-lg">추천 경로</span>
+                                <h2 className="text-2xl font-bold text-[#191F28]">워크플로우</h2>
+                                <span className="px-3 py-1 bg-[#E8F3FF] text-[#3182F6] text-xs font-bold rounded-lg">진행 단계</span>
                             </div>
                             <div className="space-y-0">
                                 <div className="flex gap-8">
