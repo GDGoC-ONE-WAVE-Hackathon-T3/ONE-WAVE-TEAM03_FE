@@ -3,8 +3,8 @@ import "./globals.css";
 
 
 export const metadata: Metadata = {
-  title: "원웨이브",
-  description: "원웨이브",
+  title: "오지랖",
+  description: "오지랖",
 };
 
 export default function RootLayout({
