@@ -16,7 +16,9 @@ export function Navigation() {
         </Link>
       </div>
       <nav className="flex items-center gap-8">
-        <span className="text-[#4E5968] font-medium cursor-pointer">서비스 소개</span>
+        <Link href="/select">
+        <span className="text-[#4E5968] font-medium cursor-pointer">시작하기</span>
+        </Link>
         {/* <span className="text-[#4E5968] font-medium cursor-pointer">프로젝트 둘러보기</span> */}
         <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
            {/* Using a placeholder since the original image might not load or be desired. Using a simple icon or just the div */}
