@@ -24,12 +24,19 @@ export default function AnalysisPage() {
                 <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-sm">
                    <i className="fa-solid fa-check text-xs"></i>
                 </div>
-                <span className="font-medium">기술 스택 선택</span>
+                <span className="font-medium">기술 스택</span>
+              </div>
+              <div className="w-12 h-[2px] bg-gray-200"></div>
+              <div className="flex items-center gap-2 text-gray-400">
+                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-sm">
+                  <i className="fa-solid fa-check text-xs"></i>
+                </div>
+                <span className="font-medium">과제 선택</span>
               </div>
               <div className="w-12 h-[2px] bg-gray-200"></div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-[#3182F6] text-white flex items-center justify-center font-bold text-sm">3</div>
-                <span className="text-[#3182F6] font-bold">코드 분석 시작</span>
+                <div className="w-8 h-8 rounded-full bg-[#3182F6] text-white flex items-center justify-center font-bold text-sm">4</div>
+                <span className="text-[#3182F6] font-bold">코드 분석</span>
               </div>
             </div>
         </div>

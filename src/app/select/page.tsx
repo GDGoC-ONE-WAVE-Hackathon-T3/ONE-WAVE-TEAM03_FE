@@ -10,14 +10,14 @@ const JOBS = [
     id: "frontend",
     title: "프론트엔드",
     iconClass: "fa-solid fa-laptop-code",
-    description: "React, Next.js 기반의 UI/UX를 구현하고<br>사용자 인터랙션을 최적화하는 프로젝트에 합류합니다.",
+    description: "웹 페이지의 구조와 디자인을 구현하고<br>사용자 인터랙션을 개발합니다.",
     tags: ["React", "TypeScript", "Tailwind"],
   },
   {
     id: "backend",
     title: "백엔드",
     iconClass: "fa-solid fa-server",
-    description: "Node.js, Spring 기반의 API 설계와<br>대규모 트래픽을 처리하는 아키텍처 프로젝트에 합류합니다.",
+    description: "데이터를 저장 및 관리하고<br>서버 로직과 API를 개발합니다.",
     tags: ["Node.js", "Spring Boot", "MySQL"],
   }
 ]
@@ -29,6 +29,10 @@ export default function SelectPage() {
   const handleNext = () => {
     if (!selectedJob) {
       alert("직군을 선택해주세요.")
+      return
+    }
+    if (selectedJob === "frontend") {
+      alert("미구현 기능입니다. 백엔드를 선택해주세요")
       return
     }
     router.push("/select/tech")
@@ -46,12 +50,17 @@ export default function SelectPage() {
           <div className="w-12 h-[2px] bg-gray-200"></div>
           <div className="flex items-center gap-2 text-gray-400">
             <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-sm">2</div>
-            <span className="font-medium">가상 입사</span>
+            <span className="font-medium">기술 스택</span>
           </div>
           <div className="w-12 h-[2px] bg-gray-200"></div>
           <div className="flex items-center gap-2 text-gray-400">
             <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-sm">3</div>
-            <span className="font-medium">코드 분석 시작</span>
+            <span className="font-medium">과제 선택</span>
+          </div>
+          <div className="w-12 h-[2px] bg-gray-200"></div>
+          <div className="flex items-center gap-2 text-gray-400">
+            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-sm">4</div>
+            <span className="font-medium">코드 분석</span>
           </div>
         </div>
 
@@ -97,13 +106,13 @@ export default function SelectPage() {
                 className="text-[#4E5968] leading-relaxed mb-8"
                 dangerouslySetInnerHTML={{ __html: job.description }}
               />
-              <div className="flex flex-wrap gap-2">
+              {/* <div className="flex flex-wrap gap-2">
                 {job.tags.map((tag) => (
                   <span key={tag} className="px-3 py-1 bg-gray-100 text-[#4E5968] text-sm font-medium rounded-full">
                     {tag}
                   </span>
                 ))}
-              </div>
+              </div> */}
               
               <div 
                 className={cn(
